@@ -1,68 +1,285 @@
+/* --- Base Styles & Theme --- */
 :root {
-  background-color: #1a1a1a;
+  background-color: #121212;
   color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
 }
 
-body { margin: 0; font-family: sans-serif; }
-
-/* Dashboard Layout */
-.main-container { display: flex; min-height: 100vh; background: #1a1a1a; }
-
-.sidebar {
-  width: 70px; background: #252525; display: flex; flex-direction: column;
-  align-items: center; padding: 20px 0; border-right: 1px solid #333;
+body {
+  margin: 0;
+  background: #121212;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
-.sidebar-add-btn {
-  background: #ffffff; color: #1a1a1a; border-radius: 50%; padding: 10px;
-  margin-top: 30px; cursor: pointer; border: none;
+.main-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.content-area { flex: 1; padding: 40px; }
-
-/* Top Search Bar */
-.search-wrapper { position: relative; max-width: 350px; }
-.search-wrapper input {
-  width: 100%; padding: 10px 10px 10px 40px; background: #2d2d2d;
-  border: none; border-radius: 10px; color: white;
+/* --- Navigation & Top Bar --- */
+.content-area {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; }
 
-/* Bento Grid & Card Styling */
-.bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.search-bar-aligned {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-bar-aligned input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 12px;
+  color: white;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.add-btn-circular {
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.add-btn-circular:hover {
+  transform: scale(1.1);
+}
+
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 30px;
+  color: #eee;
+  letter-spacing: -1px;
+}
+
+/* --- Bento Grid & Note Cards --- */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
 
 .bento-item {
-  height: 180px; border-radius: 24px; padding: 25px; cursor: pointer;
-  position: relative; transition: transform 0.2s;
-  clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%); /* The Curl Cut */
+  height: 180px;
+  border-radius: 30px;
+  padding: 25px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* The Page Curl Cutout */
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
 }
 
-.bento-item:hover { transform: translateY(-5px); }
-
-/* White Text Fix */
-.note-title {
-  color: #ffffff !important; font-size: 1.3rem; margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.4); /* Contrast for light colors */
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+.bento-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
-/* Page Curl Visual */
 .page-curl::after {
-  content: ''; position: absolute; bottom: 0; right: 0;
-  width: 40px; height: 40px; background: rgba(255,255,255,0.8);
-  border-bottom-right-radius: 24px; box-shadow: -2px -2px 10px rgba(0,0,0,0.1);
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-right-radius: 30px;
+  box-shadow: -2px -2px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Icons Aligned Right */
-.action-buttons { position: absolute; bottom: 12px; right: 45px; display: flex; gap: 6px; }
-.icon-btn {
-  background: rgba(255,255,255,0.2); color: white; border: none;
-  border-radius: 50%; padding: 6px; cursor: pointer; backdrop-filter: blur(4px);
+.note-title-white {
+  color: #ffffff !important;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.icon-btn.delete:hover { background: #ff4444; }
 
-/* Form & Note View Styles */
-.view-container { padding: 40px; max-width: 800px; margin: auto; }
-.back-btn { background: none; border: none; color: #4dabf7; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-.full-note h1 { font-size: 3rem; margin-bottom: 20px; }
-.full-note p { font-size: 1.2rem; line-height: 1.6; color: #ccc; }
+/* --- Action Buttons (Icons) --- */
+.action-row {
+  position: absolute;
+  bottom: 15px;
+  right: 55px; /* Stay clear of curl */
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.icon-btn-blur {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+}
+
+.icon-btn-blur:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.icon-btn-blur.delete-hover:hover {
+  background: #ff4d4d;
+}
+
+/* --- Form Overlay & Alignment --- */
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.form-card {
+  background: #1a1a1a;
+  padding: 35px;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid #333;
+}
+
+.form-input, .form-textarea {
+  width: 100%;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  color: white;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.form-textarea {
+  height: 180px;
+  resize: none;
+}
+
+.form-actions-aligned {
+  display: flex;
+  justify-content: flex-end; /* Fixed overlap */
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background: white;
+  color: black;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+/* --- Full Note View --- */
+.view-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.back-btn-modern {
+  background: #222;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.note-body-display {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #ddd;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+  
+  .bento-grid {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+
+  .form-card {
+    padding: 20px;
+  }
+
+  .note-title-white {
+    font-size: 1.2rem;
+  }
+  
+  .top-nav {
+    margin-bottom: 25px;
+  }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Plus, Trash2, Search, Edit, BookOpen, ArrowLeft } from 'lucide-react'
+import { Plus, Trash2, Search, Edit, ArrowLeft } from 'lucide-react'
 import './App.css'
 
 function App() {
@@ -47,67 +47,79 @@ function App() {
     } catch (error) { console.error(error) }
   }
 
-  // --- VIEWS ---
+  const updateNote = async (e) => {
+    e.preventDefault()
+    try {
+      await axios.patch(`${API_URL}/${editingNote._id}`, { title: editTitle, content: editContent, color: editColor })
+      await fetchNotes()
+      setEditingNote(null); setViewMode('grid')
+    } catch (error) { console.error(error) }
+  }
 
+  // --- VIEW: Full Note Content (TITLE REMOVED) ---
   if (viewMode === 'note' && selectedNote) {
     return (
-      <div className="view-container">
-        <button className="back-btn" onClick={() => setViewMode('grid')}>
-          <ArrowLeft size={20} /> Back to Notes
-        </button>
-        <div className="full-note">
-          <h1 style={{ color: selectedNote.color }}>{selectedNote.title}</h1>
-          <p>{selectedNote.content}</p>
+      <div className="main-container">
+        <div className="view-container">
+          <button className="back-btn-modern" onClick={() => setViewMode('grid')}>
+            <ArrowLeft size={18} /> Back
+          </button>
+          <div className="full-note-content">
+            {/* Title is hidden here, only showing the body text */}
+            <p className="note-body-display">{selectedNote.content}</p>
+          </div>
         </div>
       </div>
     )
   }
 
+  // --- VIEW: Create/Edit Form ---
   if (viewMode === 'create' || viewMode === 'edit') {
     const isEdit = viewMode === 'edit';
     return (
       <div className="form-overlay">
         <div className="form-card">
-          <h2>{isEdit ? 'Edit Page' : 'Write a New Page'}</h2>
-          <input className="form-input" value={isEdit ? editTitle : title} onChange={(e) => isEdit ? setEditTitle(e.target.value) : setTitle(e.target.value)} placeholder="Title..." />
-          <textarea className="form-textarea" value={isEdit ? editContent : content} onChange={(e) => isEdit ? setEditContent(e.target.value) : setContent(e.target.value)} placeholder="Content..." />
-          <div className="color-picker">
-            <span>Color:</span>
-            <input type="color" value={isEdit ? editColor : color} onChange={(e) => isEdit ? setEditColor(e.target.value) : setColor(e.target.value)} />
+          <h2>{isEdit ? 'Update Your Thoughts' : 'Write a New Page'}</h2>
+          <input className="form-input" value={isEdit ? editTitle : title} onChange={(e) => isEdit ? setEditTitle(e.target.value) : setTitle(e.target.value)} placeholder="Chapter title..." />
+          <textarea className="form-textarea" value={isEdit ? editContent : content} onChange={(e) => isEdit ? setEditContent(e.target.value) : setContent(e.target.value)} placeholder="Pour your thoughts here..." />
+          <div className="color-picker-row">
+            <span className="label">Page Color:</span>
+            <input type="color" value={isEdit ? editColor : color} onChange={(e) => isEdit ? setEditColor(e.target.value) : setColor(e.target.value)} className="color-input" />
           </div>
-          <div className="form-actions">
-            <button onClick={() => setViewMode('grid')}>Cancel</button>
-            <button className="submit-btn" onClick={isEdit ? () => {} : addNote}>{loading ? 'Saving...' : 'Add'}</button>
+          <div className="form-actions-aligned">
+            <button className="cancel-btn" onClick={() => setViewMode('grid')}>Cancel</button>
+            <button className="submit-btn" onClick={isEdit ? updateNote : addNote}>
+              {loading ? 'Saving...' : (isEdit ? 'Save Changes' : 'Add to Book')}
+            </button>
           </div>
         </div>
       </div>
     )
   }
 
+  // --- VIEW: Grid Dashboard (TITLE SHOWN HERE) ---
   return (
     <div className="main-container">
-      <aside className="sidebar">
-        <div className="sidebar-logo"><BookOpen size={28} /></div>
-        <button onClick={() => setViewMode('create')} className="sidebar-add-btn"><Plus size={24} /></button>
-      </aside>
-
       <main className="content-area">
-        <div className="top-bar">
-          <div className="search-wrapper">
+        <div className="top-nav">
+          <div className="search-bar-aligned">
             <Search className="search-icon" size={18} />
-            <input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input placeholder="Search through your pages..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
+          <button onClick={() => setViewMode('create')} className="add-btn-circular">
+            <Plus size={24} />
+          </button>
         </div>
 
-        <h1 className="section-title">Workstation</h1>
+        <h1 className="dashboard-title">My Book</h1>
 
         <div className="bento-grid">
           {notes.filter(n => n.title.toLowerCase().includes(search.toLowerCase())).map((note) => (
             <div key={note._id} className="bento-item page-curl" style={{ backgroundColor: note.color }} onClick={() => { setSelectedNote(note); setViewMode('note'); }}>
-              <h3 className="note-title">{note.title}</h3>
-              <div className="action-buttons">
-                <button className="icon-btn" onClick={(e) => { e.stopPropagation(); setEditingNote(note); setEditTitle(note.title); setEditContent(note.content); setEditColor(note.color); setViewMode('edit'); }}><Edit size={14} /></button>
-                <button className="icon-btn delete" onClick={(e) => { e.stopPropagation(); deleteNote(note._id); }}><Trash2 size={14} /></button>
+              <h3 className="note-title-white">{note.title}</h3>
+              <div className="action-row">
+                <button className="icon-btn-blur" onClick={(e) => { e.stopPropagation(); setEditingNote(note); setEditTitle(note.title); setEditContent(note.content); setEditColor(note.color); setViewMode('edit'); }}><Edit size={14} /></button>
+                <button className="icon-btn-blur delete-hover" onClick={(e) => { e.stopPropagation(); deleteNote(note._id); }}><Trash2 size={14} /></button>
               </div>
             </div>
           ))}
