@@ -68,7 +68,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // This handles the "Back" button and navigation by routing all non-API requests to React
 // TO THIS:
-app.get('/*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
